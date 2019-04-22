@@ -1,0 +1,30 @@
+#!/bin/bash
+#---Number of cores
+#BSUB -n 12
+#BSUB -R "span[ptile=12]"
+
+#---Job's name in LSF system
+#BSUB -J nimare
+
+#---Error file
+#BSUB -eo err_pain_test
+
+#---Output file
+#BSUB -oo out_pain_test
+
+#---LSF Queue name
+#BSUB -q PQ_nbc
+
+##########################################################
+# Set up environmental variables.
+##########################################################
+export NPROCS=`echo $LSB_HOSTS | wc -w`
+export OMP_NUM_THREADS=$NPROCS
+
+. $MODULESHOME/../global/profile.modules
+source /home/data/nbc/data-analysis/py3_environment
+
+##########################################################
+##########################################################
+
+python run_pain_test.py
