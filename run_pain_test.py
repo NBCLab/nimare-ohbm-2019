@@ -6,15 +6,21 @@ from datetime import datetime
 
 import nimare
 
-# Load the (massive) database
+# Convert the (massive) database
+print('{}: Converting Neurosynth dataset'.format(datetime.now()))
+db_file = '/scratch/tsalo006/nimare-ohbm-2019/neurosynth-dataset/database.txt'
+lb_file = '/scratch/tsalo006/nimare-ohbm-2019/neurosynth-dataset/features.txt'
+nimare.io.convert_neurosynth_to_json(
+    db_file,
+    '/scratch/tsalo006/nimare-ohbm-2019/neurosynth-dataset/neurosynth_dset.json',
+    annotations_file=lb_file)
+
 print('{}: Loading Neurosynth dataset'.format(datetime.now()))
-db_file = '/Users/tsalo/Desktop/ns-dataset/database.txt'
-lb_file = '/Users/tsalo/Desktop/ns-dataset/features.txt'
-dset = nimare.io.convert_neurosynth_to_json(db_file, 'neurosynth_dset.json',
-                                            annotations_file=lb_file)
+dset = nimare.dataset.Dataset(
+    '/scratch/tsalo006/nimare-ohbm-2019/neurosynth-dataset/neurosynth_dset.json')
 
 # Let's look at pain
-pain_studies = dset.get_studies_by_label('pain')
+pain_studies = dset.get_studies_by_label('pain', label_threshold=0.001)
 print('{0}: There are {1} studies with the word "pain" in their '
       'abstract.'.format(datetime.now(), len(pain_studies)))
 
